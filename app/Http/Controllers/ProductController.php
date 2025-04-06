@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -34,16 +35,26 @@ class ProductController extends Controller
     {
         // Validate on the Product fields
         $request->validate([
-            'name'=>'required',
-            'price'=> 'required',
-            'quantity'=> 'required',
+            'name' => 'required',
+            'price' => 'required',
+            'quantity' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
+        // Store the uploaded image
+        $imagePath = $request->file('image')->store('products', 'public');
+
         // Create new product in the DB
-        Product::create($request->all());
+        Product::create([
+            'name' => $request->name,
+            'detail' => $request->detail,
+            'price' => $request->price,
+            'quantity' => $request->quantity,
+            'image' => $imagePath,
+        ]);
 
         // redirect to Home Page
-        return redirect()->route('products.index')->with('success','Product created successfully.');
+        return redirect()->route('products.index')->with('success', 'Product created successfully.');
     }
 
     /**
@@ -67,18 +78,36 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+
+        $rules = [
+            'name' => 'required',
+            'price' => 'required',
+            'quantity' => 'required',
+        ];
+
+        // Add image validation only if a new image is being uploaded
+        if ($request->hasFile('image')) {
+            $rules['image'] = 'image|mimes:jpeg,png,jpg,gif|max:2048';
+        }
+
         // Validate on the Product fields
-        $request->validate([
-            'name'=>'required',
-            'price'=> 'required',
-            'quantity'=> 'required',
-        ]);
+        $request->validate($rules);
+
+        $data = $request->only(['name', 'detail', 'price', 'quantity']);
+
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image);
+            }
+            $data['image'] = $request->file('image')->store('products', 'public');
+        }
 
         // Update product in the DB
-        $product->update($request->all());
+        $product->update($data);
 
         // redirect to Home Page
-        return redirect()->route('products.index')->with('success','Product updated successfully.');
+        return redirect()->route('products.index')->with('success', 'Product updated successfully.');
     }
 
     /**
@@ -90,6 +119,6 @@ class ProductController extends Controller
         $product->delete();
 
         // redirect to Home Page
-        return redirect()->route('products.index')->with('success','Product deleted successfully.');
+        return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
     }
 }

@@ -5,7 +5,7 @@
     <div class="pull-right">
         <a class="btn btn-primary" href="{{ route('welcome') }}" style="margin-bottom: 10px">Home Page</a>
     </div>
-    
+
     <div class="row">
         <div class="col-lg-12">
             <div class="pull-left">
@@ -27,6 +27,7 @@
         <tr>
             <th>ID</th>
             <th>Name</th>
+            <th>Image</th>
             <th>Price</th>
             <th>Available Quantity</th>
             <th>Action</th>
@@ -36,6 +37,7 @@
             <tr>
                 <td>{{ $product->id }}</td>
                 <td>{{ $product->name }}</td>
+                <td><img src="{{ asset('storage/' . $product->image) }}" width="50" alt="Product img"></td>
                 <td>{{ $product->price }}</td>
                 <td>{{ $product->quantity }}</td>
                 <td>

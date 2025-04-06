@@ -23,11 +23,11 @@
         </div>
     @endif
 
-    <form action="{{ route('products.update',$product->id) }}" method="POST">
+    <form action="{{ route('products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
-         <div class="row">
+        <div class="row">
             <div class="col-xs-8 col-sm-8 col-md-8">
                 <div class="form-group">
                     <strong>Name:</strong>
@@ -37,23 +37,40 @@
             <div class="col-xs-8 col-sm-8 col-md-8">
                 <div class="form-group">
                     <strong>Detail:</strong>
-                    <textarea class="form-control" style="height:150px" name="detail" placeholder="Detail">{{ $product->detail }}</textarea>
+                    <textarea class="form-control" style="height:150px" name="detail"
+                        placeholder="Detail">{{ $product->detail }}</textarea>
                 </div>
             </div>
             <div class="col-xs-8 col-sm-8 col-md-8">
                 <div class="form-group">
                     <strong>Price:</strong>
-                    <input type="number" name="price" value="{{ $product->price }}" class="form-control" placeholder="Price">
+                    <input type="number" name="price" value="{{ $product->price }}" class="form-control"
+                        placeholder="Price">
                 </div>
             </div>
             <div class="col-xs-8 col-sm-8 col-md-8">
                 <div class="form-group">
                     <strong>Available Quantity:</strong>
-                    <input type="number" name="quantity" value="{{ $product->quantity }}" class="form-control" placeholder="Quantity">
+                    <input type="number" name="quantity" value="{{ $product->quantity }}" class="form-control"
+                        placeholder="Quantity">
                 </div>
             </div>
+            <div class="col-xs-8 col-sm-8 col-md-8">
+                <div class="form-group">
+                    <strong>Current Image:</strong><br>
+                    <img src="{{ asset('storage/' . $product->image) }}" width="50" alt="Product img">
+                </div>
+            </div>
+
+            <div class="col-xs-8 col-sm-8 col-md-8">
+                <div class="form-group">
+                    <strong>Change Image (optional):</strong>
+                    <input type="file" name="image" class="form-control">
+                </div>
+            </div>
+
             <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-              <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
             </div>
         </div>
 

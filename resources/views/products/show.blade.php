@@ -37,5 +37,11 @@
                 {{ $product->quantity }}
             </div>
         </div>
+        <div class="col-xs-8 col-sm-8 col-md-8">
+            <div class="form-group">
+                <strong>Product Image:</strong>
+                <img src="{{ asset('storage/' . $product->image) }}" alt="Product img" class="img-thumbnail" width="200">
+            </div>
+        </div>
     </div>
 @endsection
