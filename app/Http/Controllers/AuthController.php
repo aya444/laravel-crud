@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
 use Illuminate\Http\Request;
 use App\Services\AuthService;
 use Illuminate\Validation\ValidationException;
@@ -23,13 +25,9 @@ class AuthController extends Controller
     /**
      * Create a new user.
      */
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users', // it should be unique within the user table
-            'password' => 'required|string|min:6|confirmed', // it should be confirmed with the second password input, it automatically hashes the pass
-        ]);
+        $validated = $request->validated();
 
         $this->authService->createUser($validated);
 
@@ -48,12 +46,9 @@ class AuthController extends Controller
     /**
      * Log the user in.
      */
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $validated = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string|min:6',
-        ]);
+        $validated = $request->validated();
 
         try {
             $this->authService->loginUser($validated, $request);

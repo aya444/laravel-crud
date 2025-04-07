@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Services\FilterService;
@@ -40,16 +42,9 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
-        // Validate on the Product fields
-        $request->validate([
-            'name' => 'required',
-            'price' => 'required',
-            'quantity' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'categories' => 'nullable|array',
-        ]);
+        $request->validated();
 
         // Remove the image field from the request for seperation of concerns and handeling saving of file
         // Added current logged user_id
@@ -83,25 +78,13 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product)
+    public function update(UpdateProductRequest $request, Product $product)
     {
-        $rules = [
-            'name' => 'required',
-            'price' => 'required',
-            'quantity' => 'required',
-        ];
-
-        // Add image validation only if a new image is being uploaded
-        if ($request->hasFile('image')) {
-            $rules['image'] = 'image|mimes:jpeg,png,jpg,gif|max:2048';
-        }
-
-        // Validate on the Product fields
-        $request->validate($rules);
+        $data = $request->safe()->except('image');
 
         $this->productService->updateProduct(
             $product,
-            $request->except('image'),
+            $data,
             $request->file('image')
         );
 
