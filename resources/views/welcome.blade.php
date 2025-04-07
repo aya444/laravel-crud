@@ -1,23 +1,23 @@
 @extends('layout.layout')
 
 @section('content')
-    <div class="text-center">
-        <h1>Welcome to the Product CRUD App</h1>
+<div class="text-center mt-5">
+    <h1 class="mb-4">Welcome to the Product CRUD App</h1>
 
-        @guest
-            <p class="mt-4">Please <a href="{{ route('show.login') }}">Login</a> or <a
-                    href="{{ route('show.register') }}">Register</a> first.</p>
-        @endguest
+    @guest
+        <p class="lead">Please <a href="{{ route('show.login') }}">Login</a> or <a href="{{ route('show.register') }}">Register</a> to continue.</p>
+    @endguest
 
-        @auth
-            <p class="mt-4">Welcome back, {{ auth()->user()->name }}!</p>
-            <a href="{{ route('products.index') }}" class="btn btn-primary">Go to Products</a>
-            <a href="{{ route('categories.index') }}" class="btn btn-primary">Go to Categories</a>
-            <form method="POST" action="{{ route('logout') }}" style="display:inline;">
+    @auth
+        <p class="lead">Welcome back, <strong>{{ auth()->user()->name }}</strong>!</p>
+        <div class="d-flex justify-content-center gap-2 mt-4">
+            <a href="{{ route('products.index') }}" class="btn btn-primary">Manage Products</a>
+            <a href="{{ route('categories.index') }}" class="btn btn-outline-primary">Manage Categories</a>
+            <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="btn btn-link">Logout</button>
+                <button type="submit" class="btn btn-link text-danger">Logout</button>
             </form>
-        @endauth
-
-    </div>
+        </div>
+    @endauth
+</div>
 @endsection

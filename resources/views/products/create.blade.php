@@ -1,81 +1,68 @@
 @extends('layout.layout')
 
 @section('content')
-
-    <div class="row">
-        <div class="col-lg-12 margin-tb">
-            <div class="pull-left">
-                <h2>Add New Product</h2>
-            </div>
-            <div class="pull-right">
-                <a class="btn btn-primary" href="{{ route('products.index') }}"> Back</a>
-            </div>
+    <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Add New Product</h4>
+            <a href="{{ route('products.index') }}" class="btn btn-primary btn-sm">← Back</a>
         </div>
-    </div>
 
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <strong>Whoops!</strong> There were some problems with your input.<br><br>
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-
-        <div class="row">
-            <div class="col-xs-8 col-sm-8 col-md-8">
-                <div class="form-group">
-                    <strong>Name:</strong>
-                    <input type="text" name="name" class="form-control" placeholder="Name">
+        <div class="card-body">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <strong>Whoops!</strong> Please fix the following errors:
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
                 </div>
-            </div>
-            <div class="col-xs-8 col-sm-8 col-md-8">
-                <div class="form-group">
-                    <strong>Detail:</strong>
-                    <textarea class="form-control" style="height:150px" name="detail" placeholder="Detail"></textarea>
+            @endif
+
+            <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+
+                <div class="mb-3">
+                    <label class="form-label">Name:</label>
+                    <input type="text" name="name" class="form-control" placeholder="Product Name">
                 </div>
-            </div>
-            <div class="col-xs-8 col-sm-8 col-md-8">
-                <div class="form-group">
-                    <strong>Price:</strong>
+
+                <div class="mb-3">
+                    <label class="form-label">Detail:</label>
+                    <textarea name="detail" class="form-control" rows="3" placeholder="Product Details"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Price:</label>
                     <input type="number" name="price" class="form-control" placeholder="Price">
                 </div>
-            </div>
-            <div class="col-xs-8 col-sm-8 col-md-8">
-                <div class="form-group">
-                    <strong>Available Quantity:</strong>
+
+                <div class="mb-3">
+                    <label class="form-label">Available Quantity:</label>
                     <input type="number" name="quantity" class="form-control" placeholder="Quantity">
                 </div>
-            </div>
-            <div class="col-xs-8 col-sm-8 col-md-8">
-                <div class="form-group">
-                    <label for="categories">Categories (Optional)</label>
-                    <select multiple name="categories[]" id="categories" class="form-control">
-                        @foreach($categories as $category)
-                            <option value="{{ $category->id }}"
-                                @isset($product) @if($product->categories->contains($category->id)) selected @endif @endisset>
-                                {{ $category->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                    <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple categories</small>
+
+                <div class="mb-3">
+                    <label class="form-label d-block">Categories (Optional):</label>
+                    @foreach($categories as $category)
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="categories[]" value="{{ $category->id }}"
+                                id="category_{{ $category->id }}">
+                            <label class="form-check-label" for="category_{{ $category->id }}">{{ $category->name }}</label>
+                        </div>
+                    @endforeach
                 </div>
-            </div>
-            <div class="col-xs-8 col-sm-8 col-md-8">
-                <div class="form-group">
-                    <strong>Product Image:</strong>
+
+
+                <div class="mb-4">
+                    <label class="form-label">Product Image:</label>
                     <input type="file" name="image" class="form-control" required>
                 </div>
-            </div>
-            <div class="col-xs-8 col-sm-8 col-md-8 text-center">
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
+
+                <div class="text-end">
+                    <button type="submit" class="btn btn-success">Create Product</button>
+                </div>
+            </form>
         </div>
-
-
+    </div>
 @endsection

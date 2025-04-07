@@ -1,74 +1,60 @@
 @extends('layout.layout')
 
 @section('content')
-    <div class="row">
-        <div class="col-lg-12 margin-tb">
-            <div class="pull-left">
-                <h2>Show Category</h2>
-            </div>
-            <div class="pull-right">
-                <a class="btn btn-primary" href="{{ route('categories.index') }}"> Back</a>
-            </div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Category Details</h4>
+        <a href="{{ route('categories.index') }}" class="btn btn-primary btn-sm">← Back</a>
+    </div>
+    <div class="card-body">
+        <div class="mb-3">
+            <strong>Name:</strong> {{ $category->name }}
+        </div>
+        <div class="mb-3">
+            <strong>Details:</strong> {{ $category->detail }}
+        </div>
+        <div class="mb-3">
+            <strong>Created By:</strong> {{ $category->user->name }}
         </div>
     </div>
+</div>
 
-    <div style="height: 30px;"></div>
-
-    <div class="row">
-        <div class="col-xs-8 col-sm-8 col-md-8">
-            <div class="form-group">
-                <strong>Name:</strong>
-                {{ $category->name }}
-            </div>
-        </div>
-        <div class="col-xs-8 col-sm-8 col-md-8">
-            <div class="form-group">
-                <strong>Details:</strong>
-                {{ $category->detail }}
-            </div>
-        </div>
-        <div class="col-xs-8 col-sm-8 col-md-8">
-            <div class="form-group">
-                <strong>Created By:</strong>
-                {{ $category->user->name }}
-            </div>
-        </div>
+{{-- Products Table --}}
+<div class="card shadow-sm">
+    <div class="card-header">
+        <h5 class="mb-0">Products in this Category</h5>
     </div>
-
-    <div style="height: 30px;"></div>
-
-    <div class="row mt-4">
-        <div class="col-12">
-            <h4>Products in this Category</h4>
-            @if($category->products->count() > 0)
-                <table class="table table-bordered">
-                    <thead>
+    <div class="card-body p-0">
+        @if($category->products->count() > 0)
+            <table class="table table-striped table-bordered mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Image</th>
+                        <th>Created By</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($category->products as $product)
                         <tr>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th>Quantity</th>
-                            <th>Image</th>
-                            <th>Created By</th>
+                            <td>{{ $product->name }}</td>
+                            <td>${{ $product->price }}</td>
+                            <td>{{ $product->quantity }}</td>
+                            <td><img src="{{ asset('storage/' . $product->image) }}" width="50" class="img-thumbnail" alt="Product"></td>
+                            <td>{{ $product->user->name }}</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($category->products as $product)
-                            <tr>
-                                <td>{{ $product->name }}</td>
-                                <td>{{ $product->price }}</td>
-                                <td>{{ $product->quantity }}</td>
-                                <td>
-                                    <img src="{{ asset('storage/' . $product->image) }}" width="50" alt="Product img">
-                                </td>
-                                <td>{{ $product->user->name }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            @else
-                <div class="alert alert-info">No products found in this category</div>
-            @endif
-        </div>
+                    @endforeach
+                </tbody>
+            </table>
+        @else
+            <div class="p-3">
+                <div class="alert alert-info mb-0 text-center">No products found in this category.</div>
+            </div>
+        @endif
     </div>
-@endsection
+</div>
 
+@endsection

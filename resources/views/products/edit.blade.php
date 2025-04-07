@@ -1,92 +1,76 @@
 @extends('layout.layout')
 
 @section('content')
-    <div class="row">
-        <div class="col-lg-12 margin-tb">
-            <div class="pull-left">
-                <h2>Edit Product</h2>
-            </div>
-            <div class="pull-right">
-                <a class="btn btn-primary" href="{{ route('products.index') }}"> Back</a>
-            </div>
+    <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Edit Product</h4>
+            <a href="{{ route('products.index') }}" class="btn btn-primary btn-sm">← Back</a>
         </div>
-    </div>
 
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <strong>Whoops!</strong> There were some problems with your input.<br><br>
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+        <div class="card-body">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <strong>Whoops!</strong> Please fix the following errors:
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-    <form action="{{ route('products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        @method('PUT')
+            <form action="{{ route('products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
 
-        <div class="row">
-            <div class="col-xs-8 col-sm-8 col-md-8">
-                <div class="form-group">
-                    <strong>Name:</strong>
+                <div class="mb-3">
+                    <label class="form-label">Name:</label>
                     <input type="text" name="name" value="{{ $product->name }}" class="form-control" placeholder="Name">
                 </div>
-            </div>
-            <div class="col-xs-8 col-sm-8 col-md-8">
-                <div class="form-group">
-                    <strong>Detail:</strong>
-                    <textarea class="form-control" style="height:150px" name="detail"
+
+                <div class="mb-3">
+                    <label class="form-label">Detail:</label>
+                    <textarea name="detail" class="form-control" rows="3"
                         placeholder="Detail">{{ $product->detail }}</textarea>
                 </div>
-            </div>
-            <div class="col-xs-8 col-sm-8 col-md-8">
-                <div class="form-group">
-                    <strong>Price:</strong>
+
+                <div class="mb-3">
+                    <label class="form-label">Price:</label>
                     <input type="number" name="price" value="{{ $product->price }}" class="form-control"
                         placeholder="Price">
                 </div>
-            </div>
-            <div class="col-xs-8 col-sm-8 col-md-8">
-                <div class="form-group">
-                    <strong>Available Quantity:</strong>
+
+                <div class="mb-3">
+                    <label class="form-label">Available Quantity:</label>
                     <input type="number" name="quantity" value="{{ $product->quantity }}" class="form-control"
                         placeholder="Quantity">
                 </div>
-            </div>
-            <div class="col-xs-8 col-sm-8 col-md-8">
-                <div class="form-group">
-                    <label for="categories">Categories (Optional)</label>
-                    <select multiple name="categories[]" id="categories" class="form-control">
-                        @foreach($categories as $category)
-                            <option value="{{ $category->id }}"
-                                @isset($product) @if($product->categories->contains($category->id)) selected @endif @endisset>
-                                {{ $category->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                    <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple categories</small>
-                </div>
-            </div>
-            <div class="col-xs-8 col-sm-8 col-md-8">
-                <div class="form-group">
-                    <strong>Current Image:</strong><br>
-                    <img src="{{ asset('storage/' . $product->image) }}" width="50" alt="Product img">
-                </div>
-            </div>
 
-            <div class="col-xs-8 col-sm-8 col-md-8">
-                <div class="form-group">
-                    <strong>Change Image (optional):</strong>
+                <div class="mb-3">
+                    <label class="form-label d-block">Categories (Optional):</label>
+                    @foreach($categories as $category)
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="categories[]" value="{{ $category->id }}"
+                                id="category_{{ $category->id }}" {{ $product->categories->contains($category->id) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="category_{{ $category->id }}">{{ $category->name }}</label>
+                        </div>
+                    @endforeach
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Current Image:</label><br>
+                    <img src="{{ asset('storage/' . $product->image) }}" width="100" class="img-thumbnail">
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Change Image (optional):</label>
                     <input type="file" name="image" class="form-control">
                 </div>
-            </div>
 
-            <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
+                <div class="text-end">
+                    <button type="submit" class="btn btn-success">Update Product</button>
+                </div>
+            </form>
         </div>
-
-    </form>
+    </div>
 @endsection
