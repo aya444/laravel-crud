@@ -3,22 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use App\Services\CategoryService;
-use App\Services\ProductService;
 use Illuminate\Http\Request;
+use App\Services\FilterService;
+use App\Services\ProductService;
+use App\Services\CategoryService;
 
 class ProductController extends Controller
 {
-    public function __construct(private ProductService $productService, private CategoryService $categoryService)
-    {
+    public function __construct(
+        private ProductService $productService,
+        private CategoryService $categoryService,
+        private FilterService $filterService
+    ) {
     }
 
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = $this->productService->getProducts();
+        $products = $this->filterService->filterByProductNamaOrCategoryNameOrUserName($request->input('search'));
 
         // Pass the products to the view and show page in the url
         return view('products.list', compact('products'))->with(request()->input('page'));

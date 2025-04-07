@@ -3,13 +3,15 @@
 namespace App\Providers;
 
 use App\Services\AuthService;
-use App\Services\CategoryService;
-use App\Services\Impl\CategoryServiceImpl;
+use App\Services\FilterService;
 use App\Services\ProductService;
+use App\Services\CategoryService;
 use Illuminate\Pagination\Paginator;
 use App\Services\Impl\AuthServiceImpl;
 use Illuminate\Support\ServiceProvider;
+use App\Services\Impl\FilterServiceImpl;
 use App\Services\Impl\ProductServiceImpl;
+use App\Services\Impl\CategoryServiceImpl;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -31,6 +33,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             CategoryService::class,
             CategoryServiceImpl::class
+        );
+
+        $this->app->bind(
+            FilterService::class,
+            FilterServiceImpl::class
         );
     }
 
