@@ -30,6 +30,7 @@
             <th>Image</th>
             <th>Price</th>
             <th>Available Quantity</th>
+            <th>Created By</th>
             <th>Action</th>
         </tr>
 
@@ -40,6 +41,7 @@
                 <td><img src="{{ asset('storage/' . $product->image) }}" width="50" alt="Product img"></td>
                 <td>{{ $product->price }}</td>
                 <td>{{ $product->quantity }}</td>
+                <td>{{ $product->user->name }}</td>
                 <td>
                     <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="d-inline">
                         <a class="btn btn-info" href="{{ route('products.show', $product->id) }}">Show</a>

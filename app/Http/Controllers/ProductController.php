@@ -44,8 +44,12 @@ class ProductController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
+        // Remove the image field from the request for seperation of concerns and handeling saving of file
+        // Added current logged user_id
+        $data = array_merge($request->except('image'), ['user_id' => auth()->id()]);
+
         $this->productService->createProduct(
-            $request->except('image'),
+            $data,
             $request->file('image')
         );
 
@@ -102,7 +106,7 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        $this->productService->deleteProduct( $product );
+        $this->productService->deleteProduct($product);
 
         return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
     }

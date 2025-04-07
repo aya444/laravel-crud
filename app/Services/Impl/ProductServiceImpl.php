@@ -50,6 +50,8 @@ class ProductServiceImpl implements ProductService
     public function getProducts(): LengthAwarePaginator
     {
         // Get last 5 products from DB
-        return Product::latest()->paginate(5);
+        return Product::with('user') // Eager load the user relationship for better performance
+            ->latest()
+            ->paginate(5);
     }
 }
