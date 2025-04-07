@@ -2,12 +2,12 @@
 
 namespace App\Services\Impl;
 
-use App\Services\ProductService;
 use App\Models\Product;
 
+use App\Services\ProductService;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ProductServiceImpl implements ProductService
 {
@@ -18,7 +18,11 @@ class ProductServiceImpl implements ProductService
             $data['image'] = $image->store('products', 'public');
         }
 
-        Product::create($data);
+        $product = Product::create($data);
+
+        if(array_key_exists('categories', $data)) {
+            $product->categories()->attach($data['categories']);
+        }
     }
 
 
@@ -35,6 +39,10 @@ class ProductServiceImpl implements ProductService
         }
 
         $product->update($data);
+
+        if(array_key_exists('categories', $data)) {
+            $product->categories()->sync($data['categories']);
+        }
     }
 
     public function deleteProduct(Product $product): void
@@ -43,6 +51,8 @@ class ProductServiceImpl implements ProductService
         if ($product->image) {
             Storage::disk('public')->delete($product->image);
         }
+
+        $product->categories()->detach();
 
         $product->delete();
     }

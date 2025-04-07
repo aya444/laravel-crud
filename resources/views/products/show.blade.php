@@ -39,6 +39,20 @@
         </div>
         <div class="col-xs-8 col-sm-8 col-md-8">
             <div class="form-group">
+                <strong>Categories:</strong>
+                @if($product->categories->count() > 0)
+                    <ul>
+                        @foreach($product->categories as $category)
+                            <li>{{ $category->name }}</li>
+                        @endforeach
+                    </ul>
+                @else
+                    <span class="text-muted">No categories assigned</span>
+                @endif
+            </div>
+        </div>
+        <div class="col-xs-8 col-sm-8 col-md-8">
+            <div class="form-group">
                 <strong>Created By:</strong>
                 {{ $product->user->name }}
             </div>

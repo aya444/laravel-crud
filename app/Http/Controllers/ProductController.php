@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Services\CategoryService;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function __construct(private ProductService $productService)
+    public function __construct(private ProductService $productService, private CategoryService $categoryService)
     {
     }
 
@@ -28,7 +29,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('products.create');
+        $categories = $this->categoryService->getAllCategories();
+        return view('products.create', compact('categories'));
     }
 
     /**
@@ -42,6 +44,7 @@ class ProductController extends Controller
             'price' => 'required',
             'quantity' => 'required',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'categories' => 'nullable|array',
         ]);
 
         // Remove the image field from the request for seperation of concerns and handeling saving of file
@@ -69,7 +72,8 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return view('products.edit', compact('product'));
+        $categories = $this->categoryService->getAllCategories();
+        return view('products.edit', compact('product', 'categories'));
     }
 
     /**
@@ -77,7 +81,6 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-
         $rules = [
             'name' => 'required',
             'price' => 'required',

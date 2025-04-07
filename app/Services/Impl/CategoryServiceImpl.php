@@ -6,6 +6,7 @@ use App\Services\CategoryService;
 use App\Models\Category;
 
 use Illuminate\Pagination\LengthAwarePaginator;
+use \Illuminate\Database\Eloquent\Collection;
 
 class CategoryServiceImpl implements CategoryService
 {
@@ -28,8 +29,13 @@ class CategoryServiceImpl implements CategoryService
     public function getCategories(): LengthAwarePaginator
     {
         // Get last 5 categories from DB
-        return Category::with('user') // Eager load the user relationship for better performance
+        return Category::with('products.user') // Eager load the user relationship for better performance
             ->latest()
             ->paginate(5);
+    }
+
+    public function getAllCategories(): Collection
+    {
+        return Category::all();
     }
 }

@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Models\category;
 
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Http\UploadedFile;
+use \Illuminate\Database\Eloquent\Collection;
 
 interface CategoryService
 {
@@ -13,4 +13,5 @@ interface CategoryService
     public function updateCategory(Category $category, array $data): void;
     public function deleteCategory(Category $category): void;
     public function getCategories(): LengthAwarePaginator;
+    public function getAllCategories(): Collection;
 }

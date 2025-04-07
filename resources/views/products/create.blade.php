@@ -54,6 +54,20 @@
             </div>
             <div class="col-xs-8 col-sm-8 col-md-8">
                 <div class="form-group">
+                    <label for="categories">Categories (Optional)</label>
+                    <select multiple name="categories[]" id="categories" class="form-control">
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}"
+                                @isset($product) @if($product->categories->contains($category->id)) selected @endif @endisset>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple categories</small>
+                </div>
+            </div>
+            <div class="col-xs-8 col-sm-8 col-md-8">
+                <div class="form-group">
                     <strong>Product Image:</strong>
                     <input type="file" name="image" class="form-control" required>
                 </div>
