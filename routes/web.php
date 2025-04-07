@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,3 +20,5 @@ Route::middleware('guest')->controller(AuthController::class)->group(function ()
 });
 
 Route::resource('products', ProductController::class)->middleware('auth');
+
+Route::resource('categories', CategoryController::class)->middleware('auth');

@@ -6,13 +6,13 @@
 
         @guest
             <p class="mt-4">Please <a href="{{ route('show.login') }}">Login</a> or <a
-                    href="{{ route('show.register') }}">Register</a> to manage your products.</p>
+                    href="{{ route('show.register') }}">Register</a> first.</p>
         @endguest
-
 
         @auth
             <p class="mt-4">Welcome back, {{ auth()->user()->name }}!</p>
             <a href="{{ route('products.index') }}" class="btn btn-primary">Go to Products</a>
+            <a href="{{ route('categories.index') }}" class="btn btn-primary">Go to Categories</a>
             <form method="POST" action="{{ route('logout') }}" style="display:inline;">
                 @csrf
                 <button type="submit" class="btn btn-link">Logout</button>
