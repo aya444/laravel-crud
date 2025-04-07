@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
+use App\Services\AuthService;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+    public function __construct(private AuthService $authService)
+    {
+    }
 
     /**
      * Show the form for creating a new user.
@@ -29,9 +31,7 @@ class AuthController extends Controller
             'password' => 'required|string|min:6|confirmed', // it should be confirmed with the second password input, it automatically hashes the pass
         ]);
 
-        $user = User::create($validated);
-
-        Auth::login($user); // use the Authentication facade to handle the rest of the work (logging the user and creating the session cookie)
+        $this->authService->createUser($validated);
 
         return redirect()->route('products.index')->with('success', 'User Registered Successfully.');
     }
@@ -55,15 +55,12 @@ class AuthController extends Controller
             'password' => 'required|string|min:6',
         ]);
 
-        if (Auth::attempt($validated)) // attempt to login the user based on a set of credentials
-        {
-            $request->session()->regenerate();
+        try {
+            $this->authService->loginUser($validated, $request);
             return redirect()->route('products.index')->with('success', 'User Logged In Successfully.');
+        } catch (ValidationException $e) {
+            return back()->withErrors($e->errors());
         }
-        
-        throw ValidationException::withMessages([
-            'credentials' => ['The provided credentials are incorrect.']
-        ]);
     }
 
 
@@ -72,11 +69,7 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        Auth::logout(); // removes only the user data from the session
-
-        // $request->session()->invalidate(); // removes all data associated with that session
-
-        $request->session()->regenerateToken(); // any data that gets submited using the previous token will be rejected. (Good practice for security)
+        $this->authService->logoutUser($request);
 
         return redirect()->route('welcome')->with('success', 'User Logged Out Successfully.');
     }
